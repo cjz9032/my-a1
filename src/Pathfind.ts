@@ -76,8 +76,16 @@ export class PathFinder {
         gridNeighborsDirections
       )
 
-      for (const neigh of neighbors) {
+      for (const neighWrap of neighbors) {
+        const { item: neigh, isRun } = neighWrap
         if (!neigh || neigh.closed || !neigh.canWalk) continue
+        // check the walk through
+        if (isRun) {
+          const xx = (neigh.x + currentNode.x) / 2
+          const yy = (neigh.y + currentNode.y) / 2
+          const midNode = this.grid.get(xx, yy)
+          if (!midNode.canWalk) continue
+        }
 
         const gscore = 0 //currentNode.g + 1 // 远点 currentNode.g + neigh.getCost(currentNode)
 
@@ -85,11 +93,11 @@ export class PathFinder {
           // || gscore < neigh.g
           neigh.parent = currentNode
           neigh.h = neigh.h || this.heuristic(neigh, this.endNode)
-          neigh.g = gscore
+          // neigh.g = gscore
 
           // if (!neigh.visited) {
-            neigh.visited = true
-            opened.push(neigh)
+          neigh.visited = true
+          opened.push(neigh)
           // }
         }
       }

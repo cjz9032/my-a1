@@ -64,7 +64,15 @@ export class Matrix<T = any> {
     BOTTOM_RIGHT: { x: 1, y: 1 },
     BOTTOM: { x: 0, y: 1 },
     BOTTOM_LEFT: { x: -1, y: 1 },
-    LEFT: { x: -1, y: 0 }
+    LEFT: { x: -1, y: 0 },
+    RUN_TOP_LEFT: { x: -2, y: -2 },
+    RUN_TOP: { x: 0, y: -2 },
+    RUN_TOP_RIGHT: { x: 2, y: -2 },
+    RUN_RIGHT: { x: 2, y: 0 },
+    RUN_BOTTOM_RIGHT: { x: 2, y: 2 },
+    RUN_BOTTOM: { x: 0, y: 2 },
+    RUN_BOTTOM_LEFT: { x: -2, y: 2 },
+    RUN_LEFT: { x: -2, y: 0 }
   }
   static NEIGHBORS_ALL = [
     Matrix.NEIGHBORS.TOP_LEFT,
@@ -74,7 +82,15 @@ export class Matrix<T = any> {
     Matrix.NEIGHBORS.BOTTOM_RIGHT,
     Matrix.NEIGHBORS.BOTTOM,
     Matrix.NEIGHBORS.BOTTOM_LEFT,
-    Matrix.NEIGHBORS.LEFT
+    Matrix.NEIGHBORS.LEFT,
+    Matrix.NEIGHBORS.RUN_TOP_LEFT,
+    Matrix.NEIGHBORS.RUN_TOP,
+    Matrix.NEIGHBORS.RUN_TOP_RIGHT,
+    Matrix.NEIGHBORS.RUN_RIGHT,
+    Matrix.NEIGHBORS.RUN_BOTTOM_RIGHT,
+    Matrix.NEIGHBORS.RUN_BOTTOM,
+    Matrix.NEIGHBORS.RUN_BOTTOM_LEFT,
+    Matrix.NEIGHBORS.RUN_LEFT
   ]
   static NEIGHBORS_ADJACENT = [
     Matrix.NEIGHBORS.TOP,
@@ -336,8 +352,20 @@ export class Matrix<T = any> {
    * @param x Coluna
    * @param y Linha
    */
-  neighborsOf(x: number, y: number, items = Matrix.NEIGHBORS_ALL): T[] {
-    return items.map((r) => this.get(x + r.x, y + r.y))
+  neighborsOf(
+    x: number,
+    y: number,
+    items = Matrix.NEIGHBORS_ALL
+  ): {
+    item: T
+    isRun: boolean
+  }[] {
+    return items.map((r) => {
+      return {
+        item: this.get(x + r.x, y + r.y),
+        isRun: Math.abs(r.x) === 2 || Math.abs(r.y) === 2
+      }
+    })
   }
 
   /**

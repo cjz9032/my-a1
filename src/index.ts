@@ -9,7 +9,7 @@ const $canvas = document.getElementById('view') as HTMLCanvasElement
 $canvas.width = document.documentElement.clientWidth
 $canvas.height = document.documentElement.clientHeight
 
-const size = 1000 || Math.floor(Math.min($canvas.width, $canvas.height) / 8)
+const size = 1500 || Math.floor(Math.min($canvas.width, $canvas.height) / 8)
 
 // let items: number[][] = maze({
 //   width: size,
@@ -63,7 +63,7 @@ finder
     do {
       t += 1
       cur = cur.parent!
-      list.push(cur)
+      cur && list.push(cur)
     } while (cur && t < 1000)
 
     const ll = list.map(function (item) {
