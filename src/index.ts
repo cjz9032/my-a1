@@ -57,7 +57,7 @@ finder
   .then((res) => {
     console.log(res)
     console.time('ip')
-    const list = []
+    let list = []
     let cur = res
     let t = 0
     do {
@@ -66,11 +66,18 @@ finder
       list.push(cur)
     } while (cur && t < 1000)
 
-    console.log(list);
-    
+    const ll = list.map(function (item) {
+      const x = item.x
+      const y = item.y
+      return {
+        x,
+        y
+      }
+    })
+    console.log(ll)
+
     console.timeEnd('ip')
   })
-  .catch((err) => console.log(err.message))
 
 // function loop() {
 //   renderer.render(finder)
