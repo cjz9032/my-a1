@@ -20,20 +20,20 @@ type MatrixReduceFunction<A, T = any> = (
 ) => A
 
 export const MatrixDeserializers = {
-  json: v => {
+  json: (v: string) => {
     try {
       return JSON.parse(v)
     } catch (e) {
       return v
     }
   },
-  number: v => Number(v),
-  string: v => v
+  number: (v: string) => Number(v),
+  string: (v: string) => v
 }
 export const MatrixSerializer = {
   number: (v: number) => String(v),
   string: (v: string) => v,
-  json: v => {
+  json: (v: string) => {
     if (typeof v === 'number' || typeof v === 'string') return v
     try {
       return JSON.parse(v)
@@ -93,7 +93,7 @@ export class Matrix<T = any> {
     public width: number = 3,
     public height: number = width,
     public data: T[] = new Array(width * height).fill(null),
-    public meta = []
+    public meta: any[] = []
   ) {
     this.data = data.slice(0, width * height)
   }
@@ -328,7 +328,7 @@ export class Matrix<T = any> {
     return this.data.reduce<U>((acc, value, index) => {
       const { x, y } = this.getCoords(index)
       return cb(acc, value, x, y, this)
-    }, initialValue)
+    }, initialValue!)
   }
 
   /**
@@ -337,11 +337,11 @@ export class Matrix<T = any> {
    * @param y Linha
    */
   neighborsOf(x: number, y: number, items = Matrix.NEIGHBORS_ALL): T[] {
-    return items.map(r => this.get(x + r.x, y + r.y))
+    return items.map((r) => this.get(x + r.x, y + r.y))
   }
 
   /**
-   * Cria uma nova matriz apartir de uma string codificada
+   * Create a new array from an encoded string
    * @param encodedMatrix String codificada
    * @param param1 Opções de decodificação
    */
@@ -358,6 +358,7 @@ export class Matrix<T = any> {
     const [cols, rows, ...meta] = encodedHeader.split(headerDelimiter)
     deserializer = deserializer || MatrixDeserializers.string
     const data = encodedData.split(delimiter).map<T>(deserializer)
+
     return this.fromArray<T>(
       data,
       +cols,
@@ -377,7 +378,7 @@ export class Matrix<T = any> {
     data: T[],
     cols: number,
     rows: number,
-    meta = []
+    meta: any[] = []
   ): Matrix<T> {
     return new Matrix(cols, rows, data, meta)
   }
@@ -406,9 +407,9 @@ export class Matrix<T = any> {
    */
   static from<T = any>(data: Matrix): Matrix<T>
   static from<T = any>(
-    data,
-    cols?,
-    rows?,
+    data: any,
+    cols?: any,
+    rows?: any,
     options?: SerializeOptions
   ): Matrix<T> {
     // Clone
@@ -446,7 +447,7 @@ export class Matrix<T = any> {
     headerDelimiter = ',',
     metaDelimiter = ':',
     delimiter = ',',
-    serializer = v => v
+    serializer = (v: any) => v
   } = {}) {
     return [
       [this.width, this.height, ...this.meta.map(MatrixSerializer.json)].join(
@@ -457,8 +458,8 @@ export class Matrix<T = any> {
   }
 
   toString() {
-    return `[Matrix ${this.width}x${this.height}] {\n  ${this.mapRows(v =>
-      v.map(v => String(v || 0)).join(' ')
+    return `[Matrix ${this.width}x${this.height}] {\n  ${this.mapRows((v) =>
+      v.map((v) => String(v || 0)).join(' ')
     ).join('\n  ')}\n}`
   }
 

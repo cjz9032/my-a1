@@ -177,4 +177,29 @@ export class Renderer {
     this.ctx.shadowOffsetX = 0
     this.ctx.shadowOffsetY = 0
   }
+
+  render2(finder: PathFinder) {
+    const vp = Math.min(this.canvas.width, this.canvas.height)
+    const dMax = Math.max(finder.grid.width, finder.grid.height)
+    const size = vp / dMax
+    const center = size / 2
+
+    let node: PNode | undefined = finder.currentNode
+    let count = 0
+
+    while (node) {
+      if (node.parent) {
+        count++
+        let { x, y } = node
+        x *= size
+        y *= size
+
+        if (count <= 1) {
+        } else {
+        }
+      }
+
+      node = node.parent
+    }
+  }
 }

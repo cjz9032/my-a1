@@ -1,6 +1,7 @@
 import { Grid } from './Grid'
 import { PNode } from './PNode'
 import { Matrix } from './Matrix'
+import { renderer } from '.'
 
 interface IPoint {
   x: number
@@ -59,7 +60,6 @@ export class PathFinder {
     this.startNode.h =
       this.heuristic(this.startNode, this.endNode) *
       this.startNode.getCost(this.endNode)
-    /* eslint-disable */
     while ((currentNode = opened.shift())) {
       if (currentNode.closed) continue
 
@@ -99,7 +99,8 @@ export class PathFinder {
       opened.sort((a, b) => a.f - b.f)
 
       // Somente para renderizar a animação
-      await delay()
+      renderer.render2(this)
+      // await delay()
     }
 
     return Promise.reject(new Error('Caminho não encontrado!'))
