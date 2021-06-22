@@ -9,7 +9,7 @@ const $canvas = document.getElementById('view') as HTMLCanvasElement
 $canvas.width = document.documentElement.clientWidth
 $canvas.height = document.documentElement.clientHeight
 
-const size = 2000 || Math.floor(Math.min($canvas.width, $canvas.height) / 8)
+const size = 1000 || Math.floor(Math.min($canvas.width, $canvas.height) / 8)
 
 // let items: number[][] = maze({
 //   width: size,
@@ -56,11 +56,24 @@ finder
   })
   .then((res) => {
     console.log(res)
+    console.time('ip')
+    const list = []
+    let cur = res
+    let t = 0
+    do {
+      t += 1
+      cur = cur.parent!
+      list.push(cur)
+    } while (cur && t < 1000)
+
+    console.log(list);
+    
+    console.timeEnd('ip')
   })
   .catch((err) => console.log(err.message))
 
 // function loop() {
-//   renderer.render2(finder)
+//   renderer.render(finder)
 //   window.requestAnimationFrame(loop)
 // }
 

@@ -24,7 +24,7 @@ export class PathFinder {
   public endNode!: PNode
   public currentNode!: PNode
   public heuristic: Heuristic = PathFinder.Heuristic.Manhattan
-  public diagonalEnabled = false
+  public diagonalEnabled = true
 
   static Heuristic = {
     Manhattan: (a: IPoint, b: IPoint) =>
@@ -60,6 +60,7 @@ export class PathFinder {
     this.startNode.h =
       this.heuristic(this.startNode, this.endNode) *
       this.startNode.getCost(this.endNode)
+
     while ((currentNode = opened.shift())) {
       if (currentNode.closed) continue
 
@@ -78,19 +79,18 @@ export class PathFinder {
       for (const neigh of neighbors) {
         if (!neigh || neigh.closed || !neigh.canWalk) continue
 
-        const gscore = currentNode.g * neigh.getCost(currentNode)
+        const gscore = 0 //currentNode.g + 1 // 远点 currentNode.g + neigh.getCost(currentNode)
 
-        if (!neigh.visited || gscore < neigh.g) {
+        if (!neigh.visited) {
+          // || gscore < neigh.g
           neigh.parent = currentNode
-          neigh.h =
-            neigh.h ||
-            this.heuristic(neigh, this.endNode) * neigh.getCost(neigh)
+          neigh.h = neigh.h || this.heuristic(neigh, this.endNode)
           neigh.g = gscore
 
-          if (!neigh.visited) {
+          // if (!neigh.visited) {
             neigh.visited = true
             opened.push(neigh)
-          }
+          // }
         }
       }
 
@@ -99,7 +99,7 @@ export class PathFinder {
       opened.sort((a, b) => a.f - b.f)
 
       // Somente para renderizar a animação
-      renderer.render2(this)
+      // renderer.render2(this)
       // await delay()
     }
 
